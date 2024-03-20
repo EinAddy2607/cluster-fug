@@ -3,3 +3,6 @@ target_link_libraries(test_dense_gaec PRIVATE dense-multicut faiss dense_gaec de
 
 add_executable(test_feature_index test_feature_index.cpp)
 target_link_libraries(test_feature_index PRIVATE dense-multicut faiss feature_index feature_index_faiss)
+
+add_executable(test_message_passing test_message_passing.cpp)
+target_link_libraries(test_message_passing PRIVATE dense_mp message_passing faiss dense-multicut dense_multicut_utils feature_index feature_index_faiss feature_index_brute_force incremental_nns dense_gaec_inc_nn)

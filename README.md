@@ -54,6 +54,7 @@ where `INDEX_TYPE` and `CONTRACTION_TYPE` can be choosen as:
 | DGAECInc | faiss_brute_force | dense_gaec_inc   |
 | DLAEC | faiss_brute_force | dense_laec   |
 | DAppLAEC | HNSW | dense_laec_bf_later   |
+| DGAECMP | faiss_brute_force | dense_gaec_mp   |
 
 For example to run **GAEC**:
 	```bash

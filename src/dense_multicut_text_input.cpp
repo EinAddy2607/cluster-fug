@@ -4,6 +4,7 @@
 #include "dense_laec_inc_nn.h"
 #include "dense_features_parser.h"
 #include "dense_multicut_utils.h"
+#include "dense_gaec_mp.h"
 #include <iostream>
 #include <functional>
 #include <CLI/CLI.hpp>
@@ -47,6 +48,8 @@ std::vector<size_t> run_faiss_solvers(const std::vector<float> features, const s
         labeling = dense_gaec_faiss(num_nodes, dim, features, index_str, track_dist_offset);
     else if (contraction_type ==  "dense_gaec_inc")
         labeling = dense_gaec_inc_nn_faiss(num_nodes, dim, features, index_str, track_dist_offset, k_inc_nn, k_cap);
+    else if (contraction_type ==  "dense_gaec_mp")
+        labeling = dense_gaec_mp_faiss(num_nodes, dim, features, index_str, track_dist_offset, k_inc_nn, k_cap);
     else if (contraction_type ==  "dense_laec")
         labeling = dense_laec_inc_nn_faiss(num_nodes, dim, features, index_str, track_dist_offset, k_inc_nn, k_cap);
     else if (contraction_type ==  "dense_laec_bf_later")
@@ -68,6 +71,8 @@ std::vector<size_t> run_brute_force_solvers(const std::vector<REAL> features, co
         labeling = dense_gaec_brute_force<REAL>(num_nodes, dim, features, track_dist_offset);
     else if (contraction_type ==  "dense_gaec_inc")
         labeling = dense_gaec_inc_nn_brute_force<REAL>(num_nodes, dim, features, track_dist_offset, k_inc_nn, k_cap);
+    else if (contraction_type ==  "dense_gaec_mp")
+        labeling = dense_gaec_mp_brute_force(num_nodes, dim, features, track_dist_offset, k_inc_nn, k_cap);
     else if (contraction_type ==  "dense_laec")
         labeling = dense_laec_inc_nn_brute_force<REAL>(num_nodes, dim, features, track_dist_offset, k_inc_nn, k_cap);
     else
@@ -89,7 +94,7 @@ int main()
     app.add_option("-i,--index_str,index_pos", index_type, "One of the following feature indexing types: \n"
         "brute_force,\n faiss_brute_force,\n Flat,\n HNSW\n")->required();
     app.add_option("-s,--contraction_type,solver_pos", contraction_type, "One of the following solvers: \n"
-        "gaec,\n dense_gaec,\n dense_gaec_inc,\n dense_laec,\n dense_laec_bf_later\n")->required();
+        "gaec,\n dense_gaec,\n dense_gaec_inc,\n dense_laec,\n dense_laec_bf_later\n, dense_gaec_mp\n")->required();
     app.add_option("-k,--knn,knn_pos", k_inc_nn, "Number of nearest neighbours to build kNN graph. Only used if solver type is incremental (gaec_inc, laec, laec_bf_later)")->check(CLI::PositiveNumber);
     app.add_option("-K,--knn_cap,knn_cap_pos", k_cap, "Number of nearest neighbours to keep in the kNN graph. Only used if solver type is incremental (gaec_inc, laec, laec_bf_later)")->check(CLI::PositiveNumber);
     app.add_option("-t,--thresh,thresh_pos", dist_offset_input, "Offset to subtract from edge costs, larger value will create more clusters and viceversa.")->check(CLI::NonNegativeNumber);
